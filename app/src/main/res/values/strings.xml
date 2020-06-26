@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">DroidClicker</string>
+
+    <!-- MainActivity -->
+    <string name="usuario_label">Usuário:</string>
+    <string name="senha_label">Senha:</string>
+    <string name="botao_cadastrar">Cadastrar</string>
+    <string name="botao_login">Entrar</string>
+    <string name="botao_pontuacoes">Ver pontuações</string>
+    <string name="erro_login_invalido">Usuário ou senha inválidos.</string>
+    <string name="erro_usuario_vazio">Por favor, informe o nome de usuário.</string>
+    <string name="erro_senha_vazio">Por favor, informe a senha.</string>
+    <string name="usuario_cadastro_sucesso">Usuário cadastrado!</string>
+    <string name="usuario_cadastro_falha">Erro ao cadastrar usuário.</string>
+    <string name="usuario_cadastro_existe">Usuário já cadastrado.</string>
+
+    <!-- JogoActivity -->
+    <string name="caixa_label">Caixa:</string>
+    <string name="custo_producao_label">Custo de produção:</string>
+    <string name="preco_venda_label">Preço de venda:</string>
+    <string name="estoque_label">Estoque:</string>
+    <string name="receita_label">Receita:</string>
+    <string name="preco_dialog_titulo">Alteração de preço</string>
+    <string name="funcionarios_label">Funcionários:</string>
+    <string name="lucro_produto_label">Lucro/Prejuízo por produto:</string>
+    <string name="produtos_produzidos">Total fabricado:</string>
+    <string name="preco_vazio">Por favor, informe um preço.</string>
+    <string name="preco_invalido">Preço inválido.</string>
+    <string name="preco_dialog">Informe um preço de venda:</string>
+    <string name="botao_preco">Definir preço</string>
+    <string name="botao_contratar">Contratar funcionário</string>
+    <string name="botao_produzir">Produzir!</string>
+</resources>
