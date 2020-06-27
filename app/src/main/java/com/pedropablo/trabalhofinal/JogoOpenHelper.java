@@ -24,8 +24,8 @@ public class JogoOpenHelper extends SQLiteOpenHelper {
             "caixa REAL NOT NULL DEFAULT 50," +
             "receita REAL NOT NULL DEFAULT 0," +
             "custo_total REAL NOT NULL DEFAULT 0," +
-            "custo_atual REAL NOT NULL DEFAULT 1," +
-            "preco_atual REAL NOT NULL DEFAULT 1.5," +
+            "custo_atual REAL NOT NULL DEFAULT 2," +
+            "preco_atual REAL NOT NULL DEFAULT 3," +
             "capacidade_estoque INTEGER NOT NULL DEFAULT 50," +
             "produtos_estoque INTEGER NOT NULL DEFAULT 0," +
             "produtos_vendidos INTEGER NOT NULL DEFAULT 0," +

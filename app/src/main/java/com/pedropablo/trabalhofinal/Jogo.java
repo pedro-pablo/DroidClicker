@@ -9,9 +9,10 @@ import java.util.Random;
 
 public class Jogo {
 
-    public static final int COMPRA_DELAY_PADRAO = 500;
+    public static final int COMPRA_DELAY_PADRAO = 1000;
     public static final int CUSTO_DELAY_PADRAO = 3000;
     public static final int FUNCIONARIO_DELAY_PADRAO = 2000;
+    public static final float FUNCIONARIO_BASE_PRECO = 1250;
     public static final float UPGRADE0_PRECO = 5000;
     public static final float UPGRADE1_PRECO = 5000;
     public static final float UPGRADE2_PRECO = 25000;
@@ -177,14 +178,15 @@ public class Jogo {
 
     private int getDemanda() {
         Random rng = new Random();
-        float valorMercado = custoAtual * (0.3f + rng.nextFloat() * 0.8f);
-        int prod = Math.round((valorMercado / precoAtual) * produtosEstoque * rng.nextFloat() * 0.7f);
+        float valorMercado = custoAtual * (0.05f + rng.nextFloat());
+        int prod = Math.round((valorMercado / precoAtual) * rng.nextInt(produtosEstoque + 1));
         System.out.println("Demanda: " + prod);
         return prod;
     }
 
     public float getPrecoFuncionario() {
-        return 1250f + (1250f * ((float)this.funcionarios / 100f));
+        float preco = getUpgrade4() ? (FUNCIONARIO_BASE_PRECO / 2) : FUNCIONARIO_BASE_PRECO;
+        return preco + (preco * ((float)this.funcionarios / 100f));
     }
 
     public int getFuncionarioDelay() {
@@ -264,8 +266,7 @@ public class Jogo {
         }
         this.funcionarios++;
         this.caixa -= preco;
-        float multiplicador = getUpgrade4() ? 0.1f : 0.25f;
-        this.custoAtual += this.custoAtual * multiplicador;
+        this.custoAtual += this.custoAtual * 0.005f;
         this.salvar(context);
     }
 
@@ -390,5 +391,9 @@ public class Jogo {
         float receitaGerada = produtosComprados * this.precoAtual;
         this.caixa += receitaGerada;
         this.receita += receitaGerada;
+    }
+
+    public void setCaixa(int i) {
+        this.caixa = i;
     }
 }

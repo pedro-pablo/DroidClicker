@@ -101,6 +101,9 @@ public class JogoActivity extends AppCompatActivity {
         btnProduzir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (jogo.getCaixa() < 0) {
+                    return;
+                }
                 jogo.produzir(1);
                 atualizarTela();
             }
@@ -175,7 +178,6 @@ public class JogoActivity extends AppCompatActivity {
                 atualizarTela();
             }
         };
-
         atualizarTela();
     }
 
@@ -243,11 +245,8 @@ public class JogoActivity extends AppCompatActivity {
         textViewLucroPrejuizo.setText(formatarDinheiro(jogo.getLucroProduto()));
         btnFuncionario.setText(String.format("%s\n%s", getResources().getString(R.string.botao_contratar), formatarDinheiro(jogo.getPrecoFuncionario())));
 
-        if (jogo.getCaixa() >= jogo.getPrecoFuncionario()) {
-            btnFuncionario.setEnabled(true);
-        } else {
-            btnFuncionario.setEnabled(false);
-        }
+        btnFuncionario.setEnabled(jogo.getCaixa() >= jogo.getPrecoFuncionario());
+        btnProduzir.setEnabled(jogo.getCaixa() >= jogo.getCustoAtual());
 
         int corNegativo = ContextCompat.getColor(this, R.color.colorTextoNegativo);
         int corPositivo = ContextCompat.getColor(this, R.color.colorTextoPositivo);
@@ -367,6 +366,11 @@ public class JogoActivity extends AppCompatActivity {
     private void comprarUpgrade(Upgrade upgrade) {
         reproduzirSom(R.raw.upgrade);
         jogo.comprarUpgrade(getApplicationContext(), upgrade);
+        if (upgrade == Upgrade.UPGRADE1 || upgrade == Upgrade.UPGRADE3){
+            cancelarTimers();
+            iniciarTimers();
+        }
+        atualizarTela();
     }
 
 }
