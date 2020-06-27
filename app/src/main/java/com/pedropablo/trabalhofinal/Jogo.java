@@ -9,10 +9,16 @@ import java.util.Random;
 
 public class Jogo {
 
-    private int FUNCIONARIO_DELAY_PADRAO = 2500;
+    public static final int COMPRA_DELAY_PADRAO = 500;
+    public static final int CUSTO_DELAY_PADRAO = 3000;
+    public static final int FUNCIONARIO_DELAY_PADRAO = 2000;
+    public static final float UPGRADE0_PRECO = 5000;
+    public static final float UPGRADE1_PRECO = 5000;
+    public static final float UPGRADE2_PRECO = 25000;
+    public static final float UPGRADE3_PRECO = 50000;
+    public static final float UPGRADE4_PRECO = 75000;
 
     private int id;
-    private int usuarioId;
     private int ativo;
     private float caixa;
     private float receita;
@@ -135,13 +141,12 @@ public class Jogo {
         return upgrade4 == 1;
     }
 
-    public Jogo(int id, int usuarioId, int ativo, float caixa, float receita, float custoTotal,
+    public Jogo(int id, int ativo, float caixa, float receita, float custoTotal,
                 float precoAtual, float custoAtual, int capacidadeEstoque, int produtosEstoque,
                 int produtosVendidos, int produtosProduzidos, int funcionarios, int upgrade0, int upgrade1, int upgrade2,
                 int upgrade3, int upgrade4, int meta0, int meta1, int meta2, int meta3, int meta4,
                 int meta5, int meta6, int meta7, int meta8, int meta9) {
         this.id = id;
-        this.usuarioId = usuarioId;
         this.ativo = ativo;
         this.caixa = caixa;
         this.receita = receita;
@@ -172,10 +177,9 @@ public class Jogo {
 
     private int getDemanda() {
         Random rng = new Random();
-        float valorMercado = custoAtual * (0.2f + rng.nextFloat() * 0.6f);
-        //TODO: equilibrar fórmula de demanda
-        int prod = Math.round((valorMercado / precoAtual) * capacidadeEstoque * rng.nextFloat() * 0.7f);
-        System.out.println(prod);
+        float valorMercado = custoAtual * (0.3f + rng.nextFloat() * 0.8f);
+        int prod = Math.round((valorMercado / precoAtual) * produtosEstoque * rng.nextFloat() * 0.7f);
+        System.out.println("Demanda: " + prod);
         return prod;
     }
 
@@ -194,8 +198,16 @@ public class Jogo {
         return delay;
     }
 
+    public float getLucro() {
+        return this.receita - this.custoTotal;
+    }
+
+    public float getMargemLucro() {
+        return (getLucro() / this.receita) * 100;
+    }
+
     public void aumentarCustos() {
-        this.custoAtual += this.custoAtual * 0.001f;
+        this.custoAtual += this.custoAtual * 0.00075f;
     }
 
     public void salvar(Context context) {
@@ -214,7 +226,7 @@ public class Jogo {
         values.put("produtos_estoque", this.produtosEstoque);
         values.put("produtos_vendidos", this.produtosVendidos);
         values.put("funcionarios", this.funcionarios);
-        db.update("Jogo", values, "id = ?", new String[] { Integer.toString(this.id) });
+        db.update("jogo", values, "id = ?", new String[] { Integer.toString(this.id) });
     }
 
     public void encerrar(Context context) {
@@ -222,13 +234,12 @@ public class Jogo {
         SQLiteDatabase db = JogoOpenHelper.getInstance(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("ativo", 0);
-        db.update("Jogo", values, "id = ?", new String[] { Integer.toString(this.id) });
+        db.update("jogo", values, "id = ?", new String[] { Integer.toString(this.id) });
     }
 
     public void produzir(int quantidade) {
-        if (capacidadeEstoque - produtosEstoque < quantidade) {
-            return;
-        }
+        int espaco = capacidadeEstoque - produtosEstoque;
+        quantidade = Math.min(quantidade, espaco);
         this.produtosEstoque += quantidade;
         this.produtosFabricados += quantidade;
         float custoProducao = this.custoAtual * quantidade;
@@ -236,10 +247,14 @@ public class Jogo {
         this.custoTotal += custoProducao;
     }
 
-    public void expandirEstoque(Context context, int capacidade) {
+    private void expandirEstoque(Context context, int capacidade) {
         this.capacidadeEstoque += capacidade;
         this.custoAtual += capacidade * 0.05f;
         this.salvar(context);
+    }
+
+    public boolean estoqueTemEspaco() {
+        return this.capacidadeEstoque > this.produtosEstoque;
     }
 
     public void contratarFuncionario(Context context) {
@@ -259,13 +274,13 @@ public class Jogo {
         ContentValues values = new ContentValues();
         values.put("usuario_id", usuarioId);
         values.put("ativo", 1);
-        db.insertOrThrow("Jogo", null, values);
+        db.insertOrThrow("jogo", null, values);
         return obterJogoAtivo(usuarioId, context);
     }
 
     public static Jogo obterJogoAtivo(int usuarioId, Context context) {
         SQLiteDatabase db = JogoOpenHelper.getInstance(context).getReadableDatabase();
-        Cursor cursor = db.query("Jogo", new String[] {
+        Cursor cursor = db.query("jogo", new String[] {
                         "id", "caixa", "receita", "custo_total", "preco_atual", "custo_atual",
                         "capacidade_estoque", "produtos_estoque", "produtos_vendidos", "produtos_fabricados",
                         "funcionarios", "upgrade_0", "upgrade_1", "upgrade_2", "upgrade_3", "upgrade_4",
@@ -281,7 +296,6 @@ public class Jogo {
         if (cursor.moveToFirst()) {
             jogoAtivo = new Jogo(
                     cursor.getInt(cursor.getColumnIndex("id")),
-                    usuarioId,
                     1,
                     cursor.getFloat(cursor.getColumnIndex("caixa")),
                     cursor.getFloat(cursor.getColumnIndex("receita")),
@@ -312,6 +326,60 @@ public class Jogo {
         }
         cursor.close();
         return jogoAtivo;
+    }
+
+    public void comprarUpgrade(Context context, Upgrade upgrade) {
+        String colunaUpgrade;
+        switch (upgrade) {
+            case UPGRADE0:
+                if (caixa < UPGRADE0_PRECO || getUpgrade0()) {
+                    return;
+                }
+                caixa -= UPGRADE0_PRECO;
+                upgrade0 = 1;
+                expandirEstoque(context, 50);
+                colunaUpgrade = "upgrade_0";
+                break;
+            case UPGRADE1:
+                if (caixa < UPGRADE1_PRECO || getUpgrade1()) {
+                    return;
+                }
+                caixa -= UPGRADE1_PRECO;
+                upgrade1 = 1;
+                colunaUpgrade = "upgrade_1";
+                break;
+            case UPGRADE2:
+                if (caixa < UPGRADE2_PRECO || getUpgrade2()) {
+                    return;
+                }
+                caixa -= UPGRADE2_PRECO;
+                upgrade2 = 1;
+                expandirEstoque(context, 200);
+                colunaUpgrade = "upgrade_2";
+                break;
+            case UPGRADE3:
+                if (caixa < UPGRADE3_PRECO || getUpgrade3()) {
+                    return;
+                }
+                caixa -= UPGRADE3_PRECO;
+                upgrade3 = 1;
+                colunaUpgrade = "upgrade_3";
+                break;
+            case UPGRADE4:
+                if (caixa < UPGRADE4_PRECO || getUpgrade4()) {
+                    return;
+                }
+                caixa -= UPGRADE4_PRECO;
+                upgrade4 = 1;
+                colunaUpgrade = "upgrade_4";
+                break;
+            default:
+                return;
+        }
+        SQLiteDatabase db = JogoOpenHelper.getInstance(context).getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(colunaUpgrade, 1);
+        db.update("jogo", values, "id = ?", new String[] {Integer.toString(this.id)});
     }
 
     public void comprarProdutos() {

@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
         btnPontuacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this, PontuacaoActivity.class);
+                startActivity(intent);
             }
         });
 

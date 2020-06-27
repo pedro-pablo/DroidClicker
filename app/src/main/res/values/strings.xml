@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DroidClicker</string>
 
-    <!-- MainActivity -->
+    <!-- activity_main -->
     <string name="usuario_label">Usuário:</string>
     <string name="senha_label">Senha:</string>
     <string name="botao_cadastrar">Cadastrar</string>
@@ -14,20 +14,41 @@
     <string name="usuario_cadastro_falha">Erro ao cadastrar usuário.</string>
     <string name="usuario_cadastro_existe">Usuário já cadastrado.</string>
 
-    <!-- JogoActivity -->
+    <!-- activity_jogo -->
     <string name="caixa_label">Caixa:</string>
     <string name="custo_producao_label">Custo de produção:</string>
     <string name="preco_venda_label">Preço de venda:</string>
     <string name="estoque_label">Estoque:</string>
-    <string name="receita_label">Receita:</string>
     <string name="preco_dialog_titulo">Alteração de preço</string>
+    <string name="preco_dialog_botao">Alterar</string>
+    <string name="info_dialog_titulo">Mais informações</string>
+    <string name="info_dialog_mensagem">Receita: %s\nCusto total: %s\nLucro/Prejuízo: %s\nMargem de lucro: %.2f%%\nProdutos vendidos: %d</string>
     <string name="funcionarios_label">Funcionários:</string>
     <string name="lucro_produto_label">Lucro/Prejuízo por produto:</string>
-    <string name="produtos_produzidos">Total fabricado:</string>
+    <string name="produtos_fabricados">Fabricado:</string>
     <string name="preco_vazio">Por favor, informe um preço.</string>
     <string name="preco_invalido">Preço inválido.</string>
     <string name="preco_dialog">Informe um preço de venda:</string>
+    <string name="botao_info">Informações da empresa</string>
     <string name="botao_preco">Definir preço</string>
     <string name="botao_contratar">Contratar funcionário</string>
     <string name="botao_produzir">Produzir!</string>
+    <string name="botao_encerrar">Encerrar operações</string>
+    <string name="encerrar_dialog_titulo">Encerrar operações</string>
+    <string name="encerrar_dialog_mensagem">Tem certeza que deseja encerrar as operações da empresa?\nSua pontuação final será calculada e você deverá começar tudo do zero.</string>
+    <string name="encerrar_dialog_botao">Encerrar</string>
+    <string name="jogo_encerrado">Jogo encerrado!\nPontuação:%d</string>
+
+    <!-- activity_pontuacao -->
+    <string name="pontuacao_titulo">Pontuações</string>
+    <string name="pontuacao_item_formato">%dº %s %s</string>
+
+    <!-- Upgrades -->
+    <string name="upgrade_label">Melhorias:</string>
+    <string name="upgrade0">Aumenta em 50 a capacidade do estoque</string>
+    <string name="upgrade1">Aumenta a produtividade dos funcionários em 25%</string>
+    <string name="upgrade2">Aumenta em 200 a capacidade do estoque</string>
+    <string name="upgrade3">Aumenta a produtividade dos funcionários em 40%</string>
+    <string name="upgrade4">Reduz o preço de contratação de novos funcionários</string>
+
 </resources>

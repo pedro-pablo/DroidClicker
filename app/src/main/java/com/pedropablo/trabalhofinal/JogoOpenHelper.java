@@ -12,12 +12,12 @@ public class JogoOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
 
-    private static final String USUARIO_CREATE_SQL = "CREATE TABLE Usuario (" +
+    private static final String USUARIO_CREATE_SQL = "CREATE TABLE usuario (" +
             "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "nome TEXT NOT NULL," +
             "senha BLOB NOT NULL);";
 
-    private static final String JOGO_CREATE_SQL = "CREATE TABLE Jogo (" +
+    private static final String JOGO_CREATE_SQL = "CREATE TABLE jogo (" +
             "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "usuario_id INTEGER NOT NULL," +
             "ativo INTEGER NOT NULL DEFAULT 1," +
@@ -45,11 +45,16 @@ public class JogoOpenHelper extends SQLiteOpenHelper {
             "meta_5 INTEGER NOT NULL DEFAULT 0," +
             "meta_6 INTEGER NOT NULL DEFAULT 0," +
             "meta_7 INTEGER NOT NULL DEFAULT 0," +
-            "meta_9 INTEGER NOT NULL DEFAULT 0);";
+            "meta_9 INTEGER NOT NULL DEFAULT 0," +
+            "FOREIGN KEY (usuario_id) REFERENCES usuario(id));";
 
-    private static final String PONTUACAO_CREATE_SQL = "CREATE TABLE Pontuacao (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+    private static final String PONTUACAO_CREATE_SQL = "CREATE TABLE pontuacao (" +
+            "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "usuario_id INTEGER NOT NULL," +
-            "pontos INTEGER NOT NULL);";
+            "jogo_id INTEGER NOT NULL," +
+            "pontos INTEGER NOT NULL," +
+            "FOREIGN KEY (usuario_id) REFERENCES usuario(id)," +
+            "FOREIGN KEY (jogo_id) REFERENCES jogo(id));";
 
 
     public static JogoOpenHelper getInstance(Context context) {
@@ -78,8 +83,9 @@ public class JogoOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Usuario");
-        db.execSQL("DROP TABLE IF EXISTS Jogo");
+        db.execSQL("DROP TABLE IF EXISTS usuario");
+        db.execSQL("DROP TABLE IF EXISTS jogo");
+        db.execSQL("DROP TABLE IF EXISTS pontuacao");
         onCreate(db);
     }
 }

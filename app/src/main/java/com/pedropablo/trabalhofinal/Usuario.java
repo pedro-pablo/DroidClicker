@@ -29,16 +29,8 @@ public class Usuario {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public byte[] getSenha() {
         return senha;
-    }
-
-    public void setSenha(byte[] senha) {
-        this.senha = senha;
     }
 
     public Usuario cadastrar(Context context) {
@@ -46,20 +38,20 @@ public class Usuario {
         ContentValues values = new ContentValues();
         values.put("nome", nome);
         values.put("senha", senha);
-        db.insertOrThrow("Usuario", null, values);
+        db.insertOrThrow("usuario", null, values);
         return buscarUsuario(nome, context);
     }
 
     public static Usuario buscarUsuario(int id, Context context) {
         SQLiteDatabase db = JogoOpenHelper.getInstance(context).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT id, nome, senha FROM Usuario WHERE id = ?",
+        Cursor cursor = db.rawQuery("SELECT id, nome, senha FROM usuario WHERE id = ?",
                 new String[] {Integer.toString(id)});
         return preencherUsuario(cursor);
     }
 
     public static Usuario buscarUsuario(String nome, Context context) {
         SQLiteDatabase db = JogoOpenHelper.getInstance(context).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT id, nome, senha FROM Usuario WHERE nome = ?",
+        Cursor cursor = db.rawQuery("SELECT id, nome, senha FROM usuario WHERE nome = ?",
                 new String[] {nome});
         return preencherUsuario(cursor);
     }
